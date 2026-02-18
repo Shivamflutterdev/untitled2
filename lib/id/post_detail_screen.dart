@@ -2,61 +2,74 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'post_controller.dart';
 
-class PostDetailScreen extends StatelessWidget {
+class PostDetailScreen extends StatefulWidget {
+  const PostDetailScreen({Key? key}) : super(key: key);
 
-  final controller =
-      Get.find<PostController>();
+  @override
+  State<PostDetailScreen> createState() => _PostDetailScreenState();
+}
+
+class _PostDetailScreenState extends State<PostDetailScreen> {
+
+  final PostController controller = Get.find<PostController>();
+
+  late int id;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Get argument
+    id = Get.arguments;
+
+    // Call API only once
+    controller.fetchPostById(id);
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final int id = Get.arguments;
-
-    controller.fetchPostById(id);
-
     return Scaffold(
-
-      appBar:
-          AppBar(title: Text("Post Detail")),
+      appBar: AppBar(
+        title: const Text("Post Detail"),
+      ),
 
       body: Obx(() {
 
         if (controller.isLoading.value) {
-          return Center(
-              child:
-              CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
-        final post =
-            controller.selectedPost.value;
+        final post = controller.selectedPost.value;
 
         if (post == null) {
-          return Text("No data");
+          return const Center(
+            child: Text("No data"),
+          );
         }
 
         return Padding(
-          padding:
-              EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
 
           child: Column(
-
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
 
               Text(
                 post.title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 22,
-                  fontWeight:
-                      FontWeight.bold,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Text(post.body),
+
             ],
           ),
         );
